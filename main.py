@@ -265,14 +265,12 @@ while str(sheet.cell(row=rowNum, column=2).value) != 'Б2':
                           week_days[int(sheet.cell(row=rowNum, column=rup_semesters['number']).value)-1])
 
 # 4) Семестры дисциплин
-    cursor.execute('SELECT id FROM rup_disciplines where index like %s',
-                   (str(sheet.cell(row=rowNum, column=rup_disciplines['index']).value),))
+    cursor.execute('SELECT id FROM rup_disciplines where index like %s and educational_plan=%s',
+                   (str(sheet.cell(row=rowNum, column=rup_disciplines['index']).value), ed_plan,))
     discipl = cursor.fetchone()
-    # print(discipl[0])
-    cursor.execute('SELECT id FROM rup_semesters where number = %s',
-                   (str(sheet.cell(row=rowNum, column=rup_semesters['number']).value),))
+    cursor.execute('SELECT id FROM rup_semesters where number = %s and educational_plan=%s',
+                   (str(sheet.cell(row=rowNum, column=rup_semesters['number']).value), ed_plan,))
     sem = cursor.fetchone()
-    # print(sem[0])
     cursor.execute('SELECT id FROM semester_disciplines where rup_discipline = %s and rup_semester=%s',
                    (discipl[0], sem[0],))
     exist = cursor.fetchone()
@@ -296,9 +294,17 @@ while str(sheet.cell(row=rowNum, column=2).value) != 'Б2':
 
     rowNum = rowNum + 1
 
-# rowNum = 9
-# while str(sheet.cell(row=rowNum, column=2).value) != 'Б2':
-#     rowNum = rowNum + 1
+
+def weeks_s_to_d(s):
+    f = s.split()
+    if len(f) == 0:
+        return 0
+    if len(f) == 1:
+        return int(f[0])
+    f1 = f[1].split('/')
+    return int(f[0])+int(f1[0])/int(f1[1])
+
+
 rowNum = rowNum + 1
 practice_types = list()
 print(rowNum)
@@ -350,16 +356,18 @@ while str(sheet.cell(row=rowNum, column=2).value) != 'Б3':
                           week_days[int(sheet.cell(row=rowNum, column=rup_semesters['number']).value) - 1])
     print('Семестры РУП:', practice_types)
 # 4) Семестры дисциплин
-    cursor.execute('SELECT id FROM rup_disciplines where index like %s',
-                   (str(sheet.cell(row=rowNum, column=rup_disciplines['index']).value),))
+    cursor.execute('SELECT id FROM rup_disciplines where index like %s and educational_plan=%s',
+                   (str(sheet.cell(row=rowNum, column=rup_disciplines['index']).value), ed_plan,))
     discipl = cursor.fetchone()
-    cursor.execute('SELECT id FROM rup_semesters where number = %s',
-                   (str(sheet.cell(row=rowNum, column=rup_semesters['number']).value),))
+    cursor.execute('SELECT id FROM rup_semesters where number = %s and educational_plan=%s',
+                   (str(sheet.cell(row=rowNum, column=rup_semesters['number']).value), ed_plan,))
     sem = cursor.fetchone()
     cursor.execute('SELECT id FROM semester_disciplines where rup_discipline = %s and rup_semester=%s',
                    (discipl[0], sem[0],))
     exist = cursor.fetchone()
+
     if exist is None:
+        print('+')
         add_semester_disciplines(cursor,
                                  discipl[0],  # ID дисциплины РУП
                                  sem[0],  # ID семестра РУП
@@ -375,7 +383,9 @@ while str(sheet.cell(row=rowNum, column=2).value) != 'Б3':
                                  str(sheet.cell(row=rowNum, column=semester_disciplines['record']).value),
                                  str(sheet.cell(row=rowNum, column=semester_disciplines['exam']).value),
                                  str(sheet.cell(row=rowNum, column=semester_disciplines['task']).value),
-                                 weeks_to_days(str(sheet.cell(row=rowNum, column=semester_disciplines['practice_weeks_count']).value)))  # str(sheet.cell(row=rowNum, column=semester_disciplines['practice_weeks_count']).value)
+                                 weeks_s_to_d(str(sheet.cell(row=rowNum, column=semester_disciplines['practice_weeks_count']).value)))  # str(sheet.cell(row=rowNum, column=semester_disciplines['practice_weeks_count']).value)
+    else:
+        print('Здесь: ', exist[0])
     rowNum = rowNum + 1
 
 conn.commit()
