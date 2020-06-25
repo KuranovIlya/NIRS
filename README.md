@@ -1,13 +1,13 @@
 # NIRS
-Перенос данных из Excel в Postgres
-Используемые библиотеки:
-    - psycopg2 - для работы с Postgres
-    - openpyxl - для четния Excel
-    - configparser - для парсинга файла инициализации
+Перенос данных из Excel в Postgres<br>
+Используемые библиотеки:<br>
+    - psycopg2 - для работы с Postgres<br>
+    - openpyxl - для четния Excel<br>
+    - configparser - для парсинга файла инициализации<br>
 
-Установка:
-pip install psycopg2
-pip install openpyxl
+Установка:<br>
+pip install psycopg2<br>
+pip install openpyxl<br>
 
 Использован python 3.8
 
@@ -17,3 +17,7 @@ pip install openpyxl
 2. Производственная практика
 
 Запись в таблице opop_components, и указать, что к ней будут привязываться данные.
+
+Записи в таблицы дисциплины под каждый вид практики.
+
+Для каждого файла создавать новый учебный план.
