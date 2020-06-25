@@ -119,7 +119,7 @@ def add_disciplines(cursor,
                     code,  # Код дисциплины         Наименование дисциплины
                     name):
     cursor.execute("INSERT INTO disciplines (code, name) VALUES (%s, %s)", (code, name))
-    conn.commit()
+    # conn.commit()
 
 
 # Добавление семестра дисциплины
@@ -181,7 +181,7 @@ def add_semester_disciplines(cursor,
                     exam,
                     task,
                     practice_weeks_count))
-    conn.commit()
+    # conn.commit()
 
 
 # Добавление блока элективов
@@ -189,7 +189,7 @@ def add_elective_blocks(cursor,
                         number,  # Номер блока элективов          ID рабочего учебного плана
                         educational_plan=ed_plan):
     cursor.execute("INSERT INTO elective_blocks (number, educational_plan) VALUES (%s, %s)", (number, educational_plan))
-    conn.commit()
+    # conn.commit()
 
 
 # Добавление дисциплины РУП
@@ -200,7 +200,7 @@ def add_rup_disciplines(cursor,
                         practice_type=None):
     cursor.execute("INSERT INTO rup_disciplines (index, discipline, educational_plan, practice_type) VALUES (%s, %s, %s, %s)",
                    (index, discipline, educational_plan, practice_type))
-    conn.commit()
+    # conn.commit()
 
 
 # Добавление семестра РУП
@@ -212,7 +212,7 @@ def add_rup_semesters(cursor,
     cursor.execute(
         "INSERT INTO rup_semesters (number, days_in_a_session, days_in_a_week, educational_plan) VALUES (%s, %s, %s, %s)",
         (number, days_in_a_session, days_in_a_week, educational_plan,))
-    conn.commit()
+    # conn.commit()
 
 # Добавление типа практики
 def add_practice_types(cursor,
@@ -222,7 +222,7 @@ def add_practice_types(cursor,
     cursor.execute(
         "INSERT INTO practice_types (practice_kind, name, opop_component) VALUES (%s, %s, %s)",
         (practice_kind, name, opop_component,))
-    conn.commit()
+    # conn.commit()
 
 config = configparser.ConfigParser()  # создаём объекта парсера
 config.read("settings.ini")  # читаем конфиг
@@ -296,73 +296,88 @@ while str(sheet.cell(row=rowNum, column=2).value) != 'Б2':
 
     rowNum = rowNum + 1
 
-
-
-'''   Практика   '''
-# while str(sheet.cell(row=rowNum, column=2).value) != 'Б3':
-#     if str(sheet.cell(row=rowNum, column=2).value) == 'None':
-#         rowNum = rowNum + 1
-#         continue
-#     if str(sheet.cell(row=rowNum, column=3).value) == 'Учебная практика':
-#         cursor.execute('SELECT id FROM practice_kinds where name like %s',
-#                        (str(sheet.cell(row=rowNum, column=3).value),))
-#         practice_types = cursor.fetchone()
-#         rowNum = rowNum + 1
-#         continue
-#     elif str(sheet.cell(row=rowNum, column=3).value) == 'Производственная практика':
-#         cursor.execute('SELECT id FROM practice_kinds where name like %s',
-#                        (str(sheet.cell(row=rowNum, column=3).value),))
-#         practice_types = cursor.fetchone()
-#         rowNum = rowNum + 1
-#         continue
-#
-# # 1) Тип практики
-#     cursor.execute('SELECT id FROM practice_types where practice_kind = %s and name like %s',
-#                    (practice_types[0], str(sheet.cell(row=rowNum, column=3).value),))
-#     record = cursor.fetchone()
-#     if record is None:
-#         add_practice_types(cursor, practice_types[0], str(sheet.cell(row=rowNum, column=3).value))
-#
-# # 2) Дисциплины РУП
-#     cursor.execute('SELECT id FROM disciplines where code like %s',
-#                   (str(sheet.cell(row=rowNum, column=disciplines['code']).value),))
-#     record = cursor.fetchone()
-#     print(record[0])
-#     cursor.execute('SELECT id FROM practice_types where practice_kind = %s and name like %s',
-#                    (practice_types[0], str(sheet.cell(row=rowNum, column=3).value),))
-#     practice_types = cursor.fetchone()
-#     add_rup_disciplines(cursor, str(sheet.cell(row=rowNum, column=rup_disciplines['index']).value), record[0],
-#                         practice_type=practice_types)
-#
-# # 4) Семестры дисциплин
-#     cursor.execute('SELECT id FROM rup_disciplines where index like %s',
-#                    (str(sheet.cell(row=rowNum, column=rup_disciplines['index']).value),))
-#     discipl = cursor.fetchone()
-#     print(discipl[0])
-#     cursor.execute('SELECT id FROM rup_semesters where number = %s',
-#                    (str(sheet.cell(row=rowNum, column=rup_semesters['number']).value),))
-#     sem = cursor.fetchone()
-#     print(sem[0])
-#
-#     add_semester_disciplines(cursor,
-#                              discipl[0],  # ID дисциплины РУП
-#                              sem[0],  # ID семестра РУП
-#                              str(sheet.cell(row=rowNum, column=semester_disciplines['total_hours']).value),
-#                              str(sheet.cell(row=rowNum, column=semester_disciplines['lectures_count']).value),
-#                              str(sheet.cell(row=rowNum, column=semester_disciplines['lab_count']).value),
-#                              str(sheet.cell(row=rowNum, column=semester_disciplines['practice_count']).value),
-#                              str(sheet.cell(row=rowNum, column=semester_disciplines['consultations_hours']).value),
-#                              # Часов консультаций
-#                              str(sheet.cell(row=rowNum, column=semester_disciplines['srs_hours']).value),
-#                              str(sheet.cell(row=rowNum, column=semester_disciplines['pc_hours']).value),
-#                              0,  # Часов конс на сессии
-#                              str(sheet.cell(row=rowNum, column=semester_disciplines['record']).value),
-#                              str(sheet.cell(row=rowNum, column=semester_disciplines['exam']).value),
-#                              str(sheet.cell(row=rowNum, column=semester_disciplines['task']).value),
-#                              str(sheet.cell(row=rowNum, column=semester_disciplines['practice_weeks_count']).value))  # str(sheet.cell(row=rowNum, column=semester_disciplines['practice_weeks_count']).value)
-#
+# rowNum = 9
+# while str(sheet.cell(row=rowNum, column=2).value) != 'Б2':
 #     rowNum = rowNum + 1
-#
+rowNum = rowNum + 1
+practice_types = list()
+print(rowNum)
+'''   Практика   '''
+while str(sheet.cell(row=rowNum, column=2).value) != 'Б3':
+    if str(sheet.cell(row=rowNum, column=2).value) == 'None':
+        rowNum = rowNum + 1
+        continue
+    print(str(sheet.cell(row=rowNum, column=2).value))
+    if str(sheet.cell(row=rowNum, column=2).value) == 'Б2.У':
+        cursor.execute('SELECT id FROM practice_kinds where name like %s',
+                       ('Учебная практика',))
+        practice_types = cursor.fetchone()
+        rowNum = rowNum + 1
+        continue
+    elif str(sheet.cell(row=rowNum, column=2).value) == 'Б2.П':
+        cursor.execute('SELECT id FROM practice_kinds where name like %s',
+                       ('Производственная практика',))
+        practice_types = cursor.fetchone()
+        rowNum = rowNum + 1
+        continue
+    print(practice_types)
+# 1) Тип практики
+    cursor.execute('SELECT id FROM practice_types where practice_kind = %s and name like %s',
+                   (practice_types[0], str(sheet.cell(row=rowNum, column=3).value),))
+    record = cursor.fetchone()
+    if record is None:
+        add_practice_types(cursor, practice_types[0], str(sheet.cell(row=rowNum, column=3).value))
+    print('Тип практики:', practice_types)
+# 2) Дисциплины РУП
+    cursor.execute('SELECT id FROM disciplines where code like %s',
+                  (str(sheet.cell(row=rowNum, column=disciplines['code']).value),))
+    record = cursor.fetchone()
+    # print(record[0])
+    cursor.execute('SELECT id FROM practice_types where practice_kind = %s and name like %s',
+                   (practice_types[0], str(sheet.cell(row=rowNum, column=3).value),))
+    practice_types1 = cursor.fetchone()
+    add_rup_disciplines(cursor, str(sheet.cell(row=rowNum, column=rup_disciplines['index']).value), record[0],
+                        practice_type=practice_types1)
+    print('Дисциплины РУП:', practice_types)
+# 3) Семестры РУП
+    cursor.execute('SELECT id FROM rup_semesters where number = %s and educational_plan = %s',
+                   (str(sheet.cell(row=rowNum, column=rup_semesters['number']).value), ed_plan,))
+    record = cursor.fetchone()
+    if record is None:
+        # print(int(sheet.cell(row=rowNum, column=rup_semesters['number']).value) - 1)
+        add_rup_semesters(cursor, str(sheet.cell(row=rowNum, column=rup_semesters['number']).value),
+                          sess_days[int(sheet.cell(row=rowNum, column=rup_semesters['number']).value) - 1],
+                          week_days[int(sheet.cell(row=rowNum, column=rup_semesters['number']).value) - 1])
+    print('Семестры РУП:', practice_types)
+# 4) Семестры дисциплин
+    cursor.execute('SELECT id FROM rup_disciplines where index like %s',
+                   (str(sheet.cell(row=rowNum, column=rup_disciplines['index']).value),))
+    discipl = cursor.fetchone()
+    cursor.execute('SELECT id FROM rup_semesters where number = %s',
+                   (str(sheet.cell(row=rowNum, column=rup_semesters['number']).value),))
+    sem = cursor.fetchone()
+    cursor.execute('SELECT id FROM semester_disciplines where rup_discipline = %s and rup_semester=%s',
+                   (discipl[0], sem[0],))
+    exist = cursor.fetchone()
+    if exist is None:
+        add_semester_disciplines(cursor,
+                                 discipl[0],  # ID дисциплины РУП
+                                 sem[0],  # ID семестра РУП
+                                 str(sheet.cell(row=rowNum, column=semester_disciplines['total_hours']).value),
+                                 str(sheet.cell(row=rowNum, column=semester_disciplines['lectures_count']).value),
+                                 str(sheet.cell(row=rowNum, column=semester_disciplines['lab_count']).value),
+                                 str(sheet.cell(row=rowNum, column=semester_disciplines['practice_count']).value),
+                                 str(sheet.cell(row=rowNum, column=semester_disciplines['consultations_hours']).value),
+                                 # Часов консультаций
+                                 str(sheet.cell(row=rowNum, column=semester_disciplines['srs_hours']).value),
+                                 str(sheet.cell(row=rowNum, column=semester_disciplines['pc_hours']).value),
+                                 0,  # Часов конс на сессии
+                                 str(sheet.cell(row=rowNum, column=semester_disciplines['record']).value),
+                                 str(sheet.cell(row=rowNum, column=semester_disciplines['exam']).value),
+                                 str(sheet.cell(row=rowNum, column=semester_disciplines['task']).value),
+                                 weeks_to_days(str(sheet.cell(row=rowNum, column=semester_disciplines['practice_weeks_count']).value)))  # str(sheet.cell(row=rowNum, column=semester_disciplines['practice_weeks_count']).value)
+    rowNum = rowNum + 1
 
+conn.commit()
 cursor.close()
 conn.close()
